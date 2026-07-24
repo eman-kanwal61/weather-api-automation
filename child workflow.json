@@ -1,0 +1,178 @@
+{
+  "name": "child workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -832,
+        -384
+      ],
+      "id": "904a6ba6-4b80-4aaa-a7e5-c6d87bab0190",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5c0febde-08f8-498b-89ad-af1de382d619",
+              "name": "Query",
+              "value": "={{ $json.query }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -624,
+        -384
+      ],
+      "id": "c7b85188-d95d-41d4-b702-264ea294e18b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "cityName": "=Faisalabad\n"
+      },
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -384
+      ],
+      "id": "d029ebff-bc4c-4a3e-93aa-bf537b4a4be3",
+      "name": "OpenWeatherMap",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "VkWxHbs8FJoYBILg",
+          "name": "OpenWeatherMap account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=i am giving you open weather api result which are basically the detail of the weather of any city.kindly use that information and give me the plain simple english description of the weather\nmain {{ $json.weather[0].main }}\ndescription:{{ $json.weather[0].description }}\ntemp:{{ $json.main.temp }}\nfeels like:{{ $json.main.feels_like }}\nhumidity:{{ $json.main.humidity }}\ncountry:{{ $json.sys.country }}\ncity name:{{ $json.name }}\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        -208,
+        -384
+      ],
+      "id": "91a6d974-5465-4d75-bada-a5e0be2dd80c",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7977f23e-774a-43e0-ba46-a0a8203b28c1",
+              "name": "response",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        144,
+        -384
+      ],
+      "id": "3c953c82-074a-4ed0-967a-386916493f65",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1bbe6364-bf24-47ff-afcf-2cd5e1f0c7f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7f7cb8383540e08c92ac3cc200dcdb9e285cf6a1e7420c2423461a301c6c371a"
+  },
+  "nodeGroups": [],
+  "id": "b1wWBpVNAjpfcegK",
+  "tags": []
+}

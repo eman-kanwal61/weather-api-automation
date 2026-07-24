@@ -1,0 +1,156 @@
+{
+  "name": "parent workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -592,
+        -208
+      ],
+      "id": "c53648ea-668f-49aa-bb29-cff8d9f0a29d",
+      "name": "When chat message received",
+      "webhookId": "2a722d1a-bf8c-45dd-bb9d-f32f59cc86ee"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant\n# Tools\n-] use \"weather\" tool to find the weather of any city"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -368,
+        -208
+      ],
+      "id": "bacb819c-37b2-4a40-9abb-54472a645b91",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -16
+      ],
+      "id": "0d64ce62-b98d-4c51-ba34-0074cf00edbb",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "tO3zm5AteHJee1l6",
+          "name": "Groq account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -272,
+        -16
+      ],
+      "id": "14ff4446-8bd6-4313-b38b-166c20c74396",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "Use this tool to find weather of  any city",
+        "workflowId": {
+          "__rl": true,
+          "value": "b1wWBpVNAjpfcegK",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/b1wWBpVNAjpfcegK",
+          "cachedResultName": "child workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -176,
+        -32
+      ],
+      "id": "4b15ae8d-c5ce-424f-bd36-d92bce5e4732",
+      "name": "weather"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "weather": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "cb075dae-93af-4943-af0f-fc56feec177e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7f7cb8383540e08c92ac3cc200dcdb9e285cf6a1e7420c2423461a301c6c371a"
+  },
+  "nodeGroups": [],
+  "id": "5dw8sJq02mKcBeFy",
+  "tags": []
+}
